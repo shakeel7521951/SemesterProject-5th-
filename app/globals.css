@@ -1,0 +1,36 @@
+/* Navbar css */
+.navlinks a{
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+.navlinks a:hover{
+   text-decoration: underline blue 2px;
+}
+/* -----footer------ */
+.footerLinks a{
+ color: white;
+ text-decoration: none;
+}
+
+
+*{
+  margin: 0;
+  padding: 0;
+}
+.backgroundColor{
+  background-color: #CABA99;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+.yellowColor{
+  color: #FFF04E;
+}
+.border-yellow{
+  border: 2px solid #FFF04E;
+}
+.cursor-pointer{
+  cursor: pointer;
+}

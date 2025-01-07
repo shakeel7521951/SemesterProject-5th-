@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const Users = () => {
   const [usersData, setUsersData] = useState<any[]>([]);
@@ -10,19 +11,34 @@ const Users = () => {
       setLoading(true);
       try {
         const res = await axios.get('/api/getAllUsers');
-
         if (res.status === 200) {
           setUsersData(res.data.users);
         }
-        setLoading(false);
       } catch (error: any) {
         console.log(error?.response?.data?.message || "An error occurred");
+      } finally {
         setLoading(false);
       }
     };
 
     fetchingUserData();
   }, []);
+
+  const handleDeleteUser = async (id: any) => {
+    console.log("user id ............", id)
+    setLoading(true);
+    try {
+      const res = await axios.delete(`/api/deleteUser/${id}`);
+      if (res.status === 200) {
+        toast.success(res?.data?.message, { position: 'top-center' });
+        setUsersData(usersData.filter(user => user._id !== id));
+      }
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message, { position: 'top-center' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -33,7 +49,6 @@ const Users = () => {
       </div>
     );
   }
-
 
   return (
     <div className="container mt-4">
@@ -51,8 +66,7 @@ const Users = () => {
             <li className="col">{user.name}</li>
             <li className="col">{user.email}</li>
             <li className="col text-center">
-              <button className="btn btn-sm btn-primary me-2">Update</button>
-              <button className="btn btn-sm btn-danger">Delete</button>
+              <button className="btn btn-sm btn-danger" onClick={() => handleDeleteUser(user._id)}>Delete</button>
             </li>
           </ul>
         ))

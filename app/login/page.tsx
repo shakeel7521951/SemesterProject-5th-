@@ -1,14 +1,16 @@
 'use client';
 
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -16,9 +18,17 @@ const Login = () => {
     }));
   };
 
-  const handleSubmit = (e:any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log('Login form data ......', formData);
+    try {
+      const res = await axios.post('api/login', formData);
+      if (res.status === 200) {
+        toast.success(res.data.message, { position: 'top-center' });
+      }
+      window.location.href='/';
+    } catch (error:any) {
+      toast.error(error?.response?.data?.message || 'An error occured! Please try again later',{position:'top-center'})
+    }
   };
 
   return (
@@ -37,7 +47,7 @@ const Login = () => {
                 alt="Login poster"
               />
             </div>
- 
+
             <div className="col-12 col-md-6 d-flex flex-column justify-content-center text-center p-4 shadow rounded-4 pt-5">
               <p className="text-muted fw-semibold">
                 "Ready to buy a unique plate? Fill the form below to get started."

@@ -1,14 +1,17 @@
 'use client';
 
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 const signup = () => {
-    const [formData, setFormData] = useState({ name:'' , email: '', password: '',cPassword:'' });
+    const [loading, setLoading] = useState(false);
+    const [formData, setFormData] = useState({ name: '', email: '', password: '', cPassword: '' });
 
-    const handleChange = (e:any) => {
+    const handleChange = (e: any) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
             ...prev,
@@ -16,10 +19,34 @@ const signup = () => {
         }));
     };
 
-    const handleSubmit = (e:any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
-        console.log('Login form data ......', formData);
+        setLoading(true);
+
+        if (formData.password !== formData.cPassword) {
+            toast.warn("Passwords do not match!", { position: 'top-center' });
+            return;
+        }
+
+        try {
+            const res = await axios.post("/api/signup", {
+                name: formData.name,
+                email: formData.email,
+                password: formData.password,
+            });
+
+            if (res.status === 201) {
+                toast.success(res?.data?.message, { position: 'top-center' });
+                setFormData({ name: '', email: '', password: '', cPassword: '' });
+            }
+            window.location.href = '/';
+            setLoading(false);
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "An error occurred during signup.", { position: 'top-center' });
+            setLoading(false);
+        }
     };
+
 
     return (
         <div className="container py-2">
@@ -45,7 +72,7 @@ const signup = () => {
                             </p>
                             <h3 className="mb-4 fw-bold mt-5">Signup</h3>
                             <Form onSubmit={handleSubmit} className="d-flex flex-column align-items-center gap-3">
-                            <input
+                                <input
                                     type="text"
                                     className="form-control w-75 fs-6 p-2 rounded"
                                     required
@@ -72,7 +99,7 @@ const signup = () => {
                                     onChange={handleChange}
                                     placeholder="Enter your password"
                                 />
-                                  <input
+                                <input
                                     type="password"
                                     className="form-control w-75 fs-6 p-2 rounded"
                                     required
@@ -81,9 +108,14 @@ const signup = () => {
                                     onChange={handleChange}
                                     placeholder="Confirm Password"
                                 />
-                                <Button type="submit" className="btn btn-primary px-5 py-2 w-75 fw-bold">
-                                    Signup
+                                <Button
+                                    type="submit"
+                                    className={`btn btn-primary px-5 py-2 w-75 fw-bold ${loading ? 'cursor-not-allowed' : ''}`}
+                                    disabled={loading}
+                                >
+                                    {loading ? 'loading...' : 'Signup'}
                                 </Button>
+
                             </Form>
                             <p className="mt-3">
                                 Already have an account?{' '}

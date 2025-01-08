@@ -1,3 +1,4 @@
+'use client';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -25,7 +26,6 @@ const Users = () => {
   }, []);
 
   const handleDeleteUser = async (id: any) => {
-    console.log("user id ............", id)
     setLoading(true);
     try {
       const res = await axios.delete(`/api/deleteUser/${id}`);
@@ -61,7 +61,7 @@ const Users = () => {
 
       {usersData.length > 0 ? (
         usersData.map((user: any, index: number) => (
-          <ul key={user._id} className="d-flex justify-content-between align-items-center list-unstyled bg-light py-2 px-3 rounded-bottom shadow-sm">
+          <ul key={user._id} className="d-flex justify-content-between align-items-start list-unstyled bg-light py-2 px-3 rounded-bottom shadow-sm">
             <li className="col">{index + 1}</li>
             <li className="col">{user.name}</li>
             <li className="col">{user.email}</li>

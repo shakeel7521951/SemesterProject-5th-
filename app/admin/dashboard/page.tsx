@@ -4,6 +4,7 @@ import AdminSidebaar from '@/components/AdminSidebaar';
 import Users from '../users/page';
 import Plates from '../plates/page';
 import AddNewNumberPlate from '../addNumberPlate/page';
+import UpdateNumberPlate from '../updateNumberPlate/page';
 
 const AdminDashboard = () => {
     const [activeSection, setActiveSection] = useState<string>('none');

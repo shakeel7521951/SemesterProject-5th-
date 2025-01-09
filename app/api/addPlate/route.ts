@@ -20,8 +20,8 @@ export async function POST(request:any) {
       price,
       discount,
       category,
+      createdTime: Date.now(),
     });
-
     await newPlateNumber.save();
 
     return NextResponse.json(

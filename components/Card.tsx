@@ -13,10 +13,32 @@ interface cardProps {
         plateNo: string,
         category: string,
         createdTime: string,
-        originalPrice: number,
-        discountedPrice: number
+        price: number,
+        discount: number
     };
 }
+
+const calculateTimeOfPlate = (createdTime: string): string => {
+    if (!createdTime) return "Invalid date";
+  
+    const createdDate = new Date(createdTime);
+    const now = new Date();
+    const differenceInSeconds = Math.floor((now.getTime() - createdDate.getTime()) / 1000);
+  
+    if (differenceInSeconds < 60) {
+      return `${differenceInSeconds} sec ago`;
+    } else if (differenceInSeconds < 3600) {
+      const minutes = Math.floor(differenceInSeconds / 60);
+      return `${minutes} min ago`;
+    } else if (differenceInSeconds < 86400) {
+      const hours = Math.floor(differenceInSeconds / 3600);
+      return `${hours} hours ago`;
+    } else {
+      const days = Math.floor(differenceInSeconds / 86400);
+      return `${days} days ago`;
+    }
+  };
+  
 
 
 const Card: React.FC<cardProps> = ({ cardData }) => {
@@ -58,12 +80,12 @@ const Card: React.FC<cardProps> = ({ cardData }) => {
                 </div>
                 <div className='rounded-5 gap-2 p-2 pt-2 align-items-center align-content-center d-flex border'>
                     <BiSolidTimeFive />
-                    <p className='my-auto'>{cardData.createdTime}</p>
+                    <p className='my-auto'>{calculateTimeOfPlate(cardData.createdTime)}</p>
                 </div>
             </div>
             <div className='d-flex gap-3 mt-3'>
-                <p className='ms-auto fs-5 text-decoration-line-through'>{cardData.originalPrice} $</p>
-                <p className='fw-bold fs-5'>{cardData.discountedPrice} $</p>
+                <p className='ms-auto fs-5 text-decoration-line-through'>${cardData.price}</p>
+                <p className='fw-bold fs-5'>${cardData.discount}</p>
             </div>
         </div>
     )

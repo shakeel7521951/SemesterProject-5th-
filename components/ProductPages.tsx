@@ -1,6 +1,7 @@
+'use client';
 import Card from '@/components/Card';
-import CardsData from '@/components/Products';
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 
@@ -11,7 +12,27 @@ interface ProductPagesData {
 }
 
 const ProductPages: React.FC<ProductPagesData> = ({ categoryName,posterPlateNo,posterDescription }) => {
-    const cards = CardsData?.filter((item) => item.category === `${categoryName}` );
+    const [cardsData, setCardsData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.get('/api/getAllNumberPlates');
+                if (res.status === 200 && Array.isArray(res.data.plates)) {
+                    setCardsData(res.data.plates);
+                    console.log(res.data.plates);
+                } else {
+                    console.error('Unexpected data format:', res.data);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const cards = cardsData?.filter((item:any) => item.category === `${categoryName}` );
     return (
         <div className="container-fluid p-0">
             <div className="bgImage position-relative">

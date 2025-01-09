@@ -5,6 +5,7 @@ interface Product extends Document {
   price: Number;
   discount: Number;
   category: string;
+  createdTime: Date;
 }
 
 const numberPlateSchema = new Schema<Product>({
@@ -22,6 +23,10 @@ const numberPlateSchema = new Schema<Product>({
   category: {
     type: String,
     required: true,
+  },
+  createdTime: {
+    type: Date,
+    default:Date.now(),
   },
 });
 
